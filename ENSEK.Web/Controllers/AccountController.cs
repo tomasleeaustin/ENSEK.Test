@@ -1,7 +1,11 @@
-﻿using ENSEK.Web.Models;
+﻿using ENSEK.Model;
+using ENSEK.Web.Models;
+using ENSEK.Web.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace ENSEK.Web.Controllers
 {
@@ -9,14 +13,41 @@ namespace ENSEK.Web.Controllers
     {
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(ILogger<AccountController> logger)
+        private readonly IAccountService _accountService;
+
+        public AccountController(
+            ILogger<AccountController> logger,
+            IAccountService accountService)
         {
             _logger = logger;
+
+            _accountService = accountService;
         }
 
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpPost]
+        [Route("account/uploadcsv")]
+        public async Task<IActionResult> UploadCsv([FromBody] MeterReadingUploadRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.CsvString))
+            {
+                return Json(new
+                {
+                    message = "No file detected",
+                    success = false
+                });
+            }
+
+            var response = await _accountService.UploadMeterReadingsCsvAsync(request);
+
+            return Json(new
+            {
+                success = true
+            });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

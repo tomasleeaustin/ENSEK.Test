@@ -1,7 +1,9 @@
 ﻿using ENSEK.Api.Services.Interfaces;
+using ENSEK.Model;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Threading.Tasks;
 
 namespace ENSEK.Api.Controllers
@@ -23,10 +25,20 @@ namespace ENSEK.Api.Controllers
         [Route("meter-reading-uploads")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> MeterReadingUploads([FromQuery] IFormFile file)
+        public async Task<IActionResult> MeterReadingUploads([FromBody] MeterReadingUploadRequest request)
         {
             // TODO: accept a csv
-            //_meterReadingService.UploadMeterReadingsCsvAsync();
+            MeterReadingUploadResponse response = null;
+
+            try
+            {
+                response = await _meterReadingService.UploadMeterReadingsCsvAsync(request);
+            }
+            catch (Exception ex)
+            {
+                // TODO set up logger
+                _logger.LogError(ex, ex.Message);
+            }
 
             if (false)
             {

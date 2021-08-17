@@ -1,4 +1,4 @@
-﻿namespace ENSEK.Api.Models
+﻿namespace ENSEK.Model
 {
     public class MeterReadingUploadResponse
     {

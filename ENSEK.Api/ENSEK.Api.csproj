@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="27.1.1" />
+    <PackageReference Include="RestSharp" Version="106.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ENSEK.Data.Access\ENSEK.Data.Access.csproj" />
+    <ProjectReference Include="..\ENSEK.Model\ENSEK.Model.csproj" />
   </ItemGroup>
 
 

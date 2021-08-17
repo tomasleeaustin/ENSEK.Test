@@ -1,9 +1,9 @@
 ﻿using ENSEK.Model;
 using System.Threading.Tasks;
 
-namespace ENSEK.Api.Services.Interfaces
+namespace ENSEK.Web.Services.Interfaces
 {
-    public interface IMeterReadingService
+    public interface IAccountService
     {
         Task<MeterReadingUploadResponse> UploadMeterReadingsCsvAsync(MeterReadingUploadRequest request);
     }

@@ -1,3 +1,5 @@
+using ENSEK.Web.Services;
+using ENSEK.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,8 +19,13 @@ namespace ENSEK.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var apiEndpointAddress = Configuration.GetSection("ApiEndpointAddress").Get<string>();
+
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
+
+            services.AddTransient<IAccountService, AccountService>(
+                options => new AccountService(apiEndpointAddress));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

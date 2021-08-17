@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+﻿import React, { useEffect, useRef, useState } from "react";
 
 import "./accounts.scss";
 
@@ -15,7 +15,10 @@ window.addEventListener("drop", event => {
 const Accounts = props => {
     const defaultCsvDropClassName = "accounts-areas__upload-csv";
 
+    const fileInputRef = useRef(null);
+
     const [csvDropClassName, setCsvDropClassName] = useState(defaultCsvDropClassName);
+    const [errorResponse, setErrorResponse] = useState(null);
 
     const dragLeaveHandler = event => {
         setCsvDropClassName(defaultCsvDropClassName);
@@ -27,6 +30,42 @@ const Accounts = props => {
 
     const dropHandler = event => {
         setCsvDropClassName(defaultCsvDropClassName);
+
+        if (event.dataTransfer.files == null || event.dataTransfer.files.length === 0) {
+            alert("Please drag and drop a csv file into the drop area");
+
+            return;
+        }
+
+        uploadCsvFile(event.dataTransfer.files[0]);
+    };
+
+    const uploadCsvFile = file => {
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            const request = new Request("/account/uploadcsv", {
+                "method": "POST",
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "body": JSON.stringify({
+                    "csvString": reader.result
+                })
+            });
+
+            fetch(request)
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        setErrorResponse(data);
+
+                        return;
+                    }
+                });
+        }
+
+        reader.readAsText(file);
     };
 
     return (
@@ -43,6 +82,16 @@ const Accounts = props => {
                     <h2>CSV Upload</h2>
 
                     <p>Drag and drop CSV</p>
+
+                    {
+                        errorResponse != null &&
+                        <p>{errorResponse}</p>
+                    }
+
+                    <input
+                        type="file"
+                        ref={fileInputRef}
+                        style={{"display": "none"}} />
                 </div>
 
                 <div className="accounts-areas__links">
