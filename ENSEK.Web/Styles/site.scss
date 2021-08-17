@@ -1,0 +1,11 @@
+﻿@import "fonts.scss";
+@import "variables.scss";
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+h1, h2, h3, h4 {
+    color: $ensekOrange;
+    font-family: 'Oswald', sans-serif;
+}

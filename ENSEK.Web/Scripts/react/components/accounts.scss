@@ -1,0 +1,28 @@
+﻿@import "~/Styles/variables.scss";
+
+.accounts-areas {
+    display: flex;
+}
+
+.accounts-areas__upload-csv {
+    align-items: center;
+    border: 4px dashed $ensekBlue;
+    border-radius: 10px;
+    display: flex;
+    flex: 3;
+    flex-flow: column;
+    justify-content: center;
+    min-height: 300px;
+
+    h2 {
+        padding-bottom: 0.4em;
+    }
+
+    &.dragover {
+        opacity: 0.5;
+    }
+}
+
+.accounts-areas__links {
+    flex: 5;
+}

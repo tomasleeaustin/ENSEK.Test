@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ENSEK.Api", "ENSEK.Api\ENSEK.Api.csproj", "{79459A34-3673-4C25-B72D-8E93FCD885D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ENSEK.Api", "ENSEK.Api\ENSEK.Api.csproj", "{79459A34-3673-4C25-B72D-8E93FCD885D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ENSEK.Data.Access", "ENSEK.Data.Access\ENSEK.Data.Access.csproj", "{C4FA3687-8AF4-4977-A7DB-1BD6ECBC19AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ENSEK.Data.Access", "ENSEK.Data.Access\ENSEK.Data.Access.csproj", "{C4FA3687-8AF4-4977-A7DB-1BD6ECBC19AB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ENSEK.Web", "ENSEK.Web\ENSEK.Web.csproj", "{5B5F2448-F663-4928-9AF7-2411AFE9AF87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C4FA3687-8AF4-4977-A7DB-1BD6ECBC19AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4FA3687-8AF4-4977-A7DB-1BD6ECBC19AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4FA3687-8AF4-4977-A7DB-1BD6ECBC19AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B5F2448-F663-4928-9AF7-2411AFE9AF87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B5F2448-F663-4928-9AF7-2411AFE9AF87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B5F2448-F663-4928-9AF7-2411AFE9AF87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B5F2448-F663-4928-9AF7-2411AFE9AF87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

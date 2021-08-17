@@ -1,3 +1,5 @@
+using ENSEK.Api.Services;
+using ENSEK.Api.Services.Interfaces;
 using ENSEK.Data.Access;
 using ENSEK.Data.Access.DbContexts;
 using ENSEK.Data.Access.DbContexts.Interfaces;
@@ -34,6 +36,8 @@ namespace ENSEK.Api
 
             services.AddTransient<IEnsekDbContext, EnsekDbContext>(
                 options => new EnsekDbContext(connectionStrings.EnsekDb));
+
+            services.AddTransient<IMeterReadingService, MeterReadingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
