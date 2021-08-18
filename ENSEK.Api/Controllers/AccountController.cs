@@ -25,10 +25,9 @@ namespace ENSEK.Api.Controllers
         [Route("meter-reading-uploads")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> MeterReadingUploads([FromBody] MeterReadingUploadRequest request)
+        public async Task<ActionResult<MeterReadingUploadResponse>> MeterReadingUploads([FromBody] MeterReadingUploadRequest request)
         {
-            // TODO: accept a csv
-            MeterReadingUploadResponse response = null;
+            MeterReadingUploadResponse response;
 
             try
             {
@@ -37,15 +36,12 @@ namespace ENSEK.Api.Controllers
             catch (Exception ex)
             {
                 // TODO set up logger
-                _logger.LogError(ex, ex.Message);
-            }
+                _logger.LogError(ex, ex.Message); 
 
-            if (false)
-            {
                 return BadRequest();
             }
 
-            return Ok();
+            return response;
         }
     }
 }

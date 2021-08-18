@@ -1,5 +1,6 @@
 ﻿using ENSEK.Model;
 using ENSEK.Web.Services.Interfaces;
+using Newtonsoft.Json;
 using RestSharp;
 using System.Net;
 using System.Threading.Tasks;
@@ -34,12 +35,9 @@ namespace ENSEK.Web.Services
                 // Unknown error
             }
 
-            // TODO deserialise response DTO e.g. JsonConvert.DeserializeObject<ModelDto>(response.Content);
-            // TODO convert to local model with automapper e.g. _mapper.Map<Model>(ModelDto);
+            var response = JsonConvert.DeserializeObject<MeterReadingUploadResponse>(restResponse.Content);
 
-            return new MeterReadingUploadResponse
-            {
-            };
+            return response;
         }
     }
 }

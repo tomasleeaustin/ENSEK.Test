@@ -58,8 +58,6 @@ namespace ENSEK.Data.Access.DbContexts
 
             modelBuilder.Entity<MeterReading>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("meter_reading", "customers");
 
                 entity.Property(e => e.AccountId).HasColumnName("account_id");
@@ -67,8 +65,8 @@ namespace ENSEK.Data.Access.DbContexts
                 entity.Property(e => e.DateTime).HasColumnName("date_time");
 
                 entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("nextval('customers.meter_reading_id_seq'::regclass)");
 
                 entity.Property(e => e.Value)
                     .HasPrecision(5)

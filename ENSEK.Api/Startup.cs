@@ -1,8 +1,14 @@
+using AutoMapper;
+using ENSEK.Api.Models;
 using ENSEK.Api.Services;
 using ENSEK.Api.Services.Interfaces;
+using ENSEK.Api.Validators;
 using ENSEK.Data.Access;
 using ENSEK.Data.Access.DbContexts;
 using ENSEK.Data.Access.DbContexts.Interfaces;
+using ENSEK.Data.Access.Entities;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,12 +38,20 @@ namespace ENSEK.Api
         {
             var connectionStrings = Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddFluentValidation();
 
             services.AddTransient<IEnsekDbContext, EnsekDbContext>(
                 options => new EnsekDbContext(connectionStrings.EnsekDb));
 
-            services.AddTransient<IMeterReadingService, MeterReadingService>();
+            services.AddTransient<IMeterReadingService, MeterReadingService>(
+                options => new MeterReadingService(
+                    options.GetRequiredService<IEnsekDbContext>(),
+                    options.GetRequiredService<IMapper>()));
+
+            services.AddTransient<IValidator<MeterReadingDto>, MeterReadingValidator>();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -62,6 +62,8 @@ const Accounts = props => {
 
                         return;
                     }
+
+                    alert(`Failed: ${data.response.failCount}\r\nSucceeded: ${data.response.successCount}`);
                 });
         }
 
