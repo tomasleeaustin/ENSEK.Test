@@ -55,11 +55,6 @@ namespace ENSEK.Api.Services
 
             foreach (var record in csvRecords)
             {
-                if (record.MeterReadValue == "999999" || record.MeterReadValue == "-06575")
-                {
-                    int i = 0;
-                }
-
                 // Validate data formats (spec "Reading values should be in the format NNNNN")
                 var result = validator.Validate(record);
 
