@@ -32,16 +32,12 @@ namespace ENSEK.Api.Services
         {
             var response = new MeterReadingUploadResponse();
 
-            // TODO: potentially receive csv as a file, though that would mean storing it somewhere first.
-
             if (string.IsNullOrWhiteSpace(request.CsvString))
             {
-                throw new Exception("No csv content found");
+                throw new Exception("No CSV content found.");
             }
 
-            var csvRecords = new List<MeterReadingDto>();
-            var recordsToAdd = new List<MeterReading>();
-
+            IEnumerable<MeterReadingDto> csvRecords = null;
             var byteArray = Encoding.UTF8.GetBytes(request.CsvString);
 
             using (var stream = new MemoryStream(byteArray))
@@ -51,6 +47,36 @@ namespace ENSEK.Api.Services
                 csvRecords = csvReader.GetRecords<MeterReadingDto>().ToList();
             }
 
+            if (csvRecords == null || csvRecords.Count() == 0)
+            {
+                throw new Exception("Could not parse CSV records.");
+            }
+
+            var recordsToAdd = await ValidateCsvRecords(csvRecords, response);
+
+            SaveMeterReadings(recordsToAdd);
+
+            return response;
+        }
+
+        private void SaveMeterReadings(IEnumerable<MeterReading> recordsToAdd)
+        {
+            try
+            {
+                _ensekDbContext.MeterReadings.AddRange(recordsToAdd);
+                _ensekDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        private async Task<IEnumerable<MeterReading>> ValidateCsvRecords(
+            IEnumerable<MeterReadingDto> csvRecords, 
+            MeterReadingUploadResponse response)
+        {
+            var recordsToAdd = new List<MeterReading>();
             var validator = new MeterReadingValidator();
 
             foreach (var record in csvRecords)
@@ -101,18 +127,7 @@ namespace ENSEK.Api.Services
                 response.SuccessCount++;
             }
 
-            try
-            {
-                _ensekDbContext.MeterReadings.AddRange(recordsToAdd);
-                _ensekDbContext.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            
-
-            return response;
+            return recordsToAdd;
         }
     }
 }
