@@ -1,5 +1,7 @@
 ﻿import React, { useEffect, useRef, useState } from "react";
 
+import MeterReadings from "./meterReadings";
+
 import "./accounts.scss";
 
 // Prevent file drops from loading a new tab if the drop area is missed.
@@ -19,6 +21,9 @@ const Accounts = props => {
 
     const [csvDropClassName, setCsvDropClassName] = useState(defaultCsvDropClassName);
     const [errorResponse, setErrorResponse] = useState(null);
+    const [meterReadings, setMeterReadings] = useState(null);
+    const [processing, setProcessing] = useState(false);
+    const [successResponse, setSuccessResponse] = useState(null);
 
     const dragLeaveHandler = event => {
         setCsvDropClassName(defaultCsvDropClassName);
@@ -29,15 +34,41 @@ const Accounts = props => {
     };
 
     const dropHandler = event => {
+        setErrorResponse(null);
+        setSuccessResponse(null);
+        setProcessing(true);
+
         setCsvDropClassName(defaultCsvDropClassName);
 
         if (event.dataTransfer.files == null || event.dataTransfer.files.length === 0) {
-            alert("Please drag and drop a csv file into the drop area");
+            alert("Please drag and drop a CSV file into the drop area.");
+            setProcessing(false);
 
             return;
         }
 
-        uploadCsvFile(event.dataTransfer.files[0]);
+        const firstFile = event.dataTransfer.files[0];
+
+        if (!firstFile.name.toLowerCase().endsWith(".csv")) {
+            alert("Please upload a CSV file.");
+            setProcessing(false);
+
+            return;
+        }
+
+        uploadCsvFile(firstFile);
+    };
+
+    const getMeterReadings = () => {
+        fetch("/account/meterreadings")
+            .then(response => response.json())
+            .then(data => {
+                if (data.meterReadings == null) {
+                    return;
+                }
+
+                setMeterReadings(data.meterReadings);
+            });
     };
 
     const uploadCsvFile = file => {
@@ -57,18 +88,27 @@ const Accounts = props => {
             fetch(request)
                 .then(response => response.json())
                 .then(data => {
-                    if (!data.success) {
-                        setErrorResponse(data);
+                    if (data.response == null) {
+                        setErrorResponse("Error uploading CSV");
 
                         return;
                     }
 
-                    alert(`Failed: ${data.response.failCount}\r\nSucceeded: ${data.response.successCount}`);
+                    getMeterReadings();
+
+                    setSuccessResponse(data.response);
+                })
+                .finally(() => {
+                    setProcessing(false);
                 });
         }
 
         reader.readAsText(file);
     };
+
+    useEffect(() => {
+        getMeterReadings();
+    }, []);
 
     return (
         <React.Fragment>
@@ -86,8 +126,23 @@ const Accounts = props => {
                     <p>Drag and drop CSV</p>
 
                     {
+                        processing &&
+                        <div className="processing-spinner">
+                            <i className="fas fa-spinner fa-pulse"></i>
+                        </div>
+                    }
+
+                    {
                         errorResponse != null &&
-                        <p>{errorResponse}</p>
+                        <p className="error">{errorResponse}</p>
+                    }
+
+                    {
+                        successResponse != null &&
+                        <div>
+                            <p className="success">Successful entries: {successResponse.successCount}</p>
+                            <p className="error">Failed entries: {successResponse.failCount}</p>
+                        </div>
                     }
 
                     <input
@@ -96,8 +151,8 @@ const Accounts = props => {
                         style={{"display": "none"}} />
                 </div>
 
-                <div className="accounts-areas__links">
-                    <button>Add reading</button>
+                <div className="accounts-areas__extras">
+                    <MeterReadings meterReadings={meterReadings} />
                 </div>
             </section>
         </React.Fragment>

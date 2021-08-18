@@ -1,3 +1,6 @@
+using ENSEK.Data.Access;
+using ENSEK.Data.Access.DbContexts;
+using ENSEK.Data.Access.DbContexts.Interfaces;
 using ENSEK.Web.Services;
 using ENSEK.Web.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -20,12 +23,18 @@ namespace ENSEK.Web
         public void ConfigureServices(IServiceCollection services)
         {
             var apiEndpointAddress = Configuration.GetSection("ApiEndpointAddress").Get<string>();
+            var connectionStrings = Configuration.GetSection("ConnectionStrings").Get<ConnectionStrings>();
 
             services.AddControllersWithViews()
                 .AddRazorRuntimeCompilation();
 
+            services.AddTransient<IEnsekDbContext, EnsekDbContext>(
+                options => new EnsekDbContext(connectionStrings.EnsekDb));
+
             services.AddTransient<IAccountService, AccountService>(
-                options => new AccountService(apiEndpointAddress));
+                options => new AccountService(
+                    options.GetRequiredService<IEnsekDbContext>(),
+                    apiEndpointAddress));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

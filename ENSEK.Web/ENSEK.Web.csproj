@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ENSEK.Data.Access\ENSEK.Data.Access.csproj" />
     <ProjectReference Include="..\ENSEK.Model\ENSEK.Model.csproj" />
   </ItemGroup>
 

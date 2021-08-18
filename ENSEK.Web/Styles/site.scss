@@ -9,3 +9,13 @@ h1, h2, h3, h4 {
     color: $ensekOrange;
     font-family: 'Oswald', sans-serif;
 }
+
+.error {
+    color: $dangerColour;
+    font-weight: 500;
+}
+
+.success {
+    color: $successColour;
+    font-weight: 500;
+}

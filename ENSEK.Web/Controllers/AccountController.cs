@@ -29,6 +29,18 @@ namespace ENSEK.Web.Controllers
             return View();
         }
 
+        [HttpGet]
+        [Route("account/meterreadings")]
+        public async Task<IActionResult> MeterReadings()
+        {
+            var meterReadings = await _accountService.GetMeterReadings();
+
+            return Json(new
+            {
+                meterReadings = meterReadings
+            });
+        }
+
         [HttpPost]
         [Route("account/uploadcsv")]
         public async Task<IActionResult> UploadCsv([FromBody] MeterReadingUploadRequest request)
